@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles/App.css';
+import React from 'react';
+import TaskService from "./service/TaskService";
+import Task from "./components/Task";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    let [tasks, setTasks] = React.useState();
+
+    React.useEffect(() => {
+        tasksFetch();
+    }, []);
+
+    const tasksFetch = async function() {
+        const tasks1 = await TaskService.getAll();
+        setTasks(tasks1);
+    }
+
+    return (
+      <div className="App">
+          <div className="header">
+              <h1 className="app-title">To-Do array</h1>
+          </div>
+
+          <div className="tasks">
+              {tasks?.map(x => <Task name={x.name} description={x.description} date={x.date} done={x.done}/>)}
+          </div>
+          <button className="create-task">+</button>
+      </div>
+    );
 }
 
 export default App;
